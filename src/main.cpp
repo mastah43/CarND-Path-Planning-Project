@@ -220,12 +220,12 @@ int main() {
           // j[1] is the data JSON object
           
         	// Main car's localization Data
-          	double car_x = j[1]["x"];
-          	double car_y = j[1]["y"];
+          	double car_x = j[1]["x"]; // in meter
+          	double car_y = j[1]["y"]; // in meter
           	double car_s = j[1]["s"];
           	double car_d = j[1]["d"];
-          	double car_yaw = j[1]["yaw"];
-          	double car_speed = j[1]["speed"];
+          	double car_yaw = j[1]["yaw"]; // in degrees
+          	double car_speed = j[1]["speed"]; // in m/second
 
           	// Previous path data given to the Planner
           	auto previous_path_x = j[1]["previous_path_x"];
@@ -239,13 +239,26 @@ int main() {
 
           	json msgJson;
 
-          	vector<double> next_x_vals;
-          	vector<double> next_y_vals;
+          	vector<double> next_x;
+          	vector<double> next_y;
 
+            double dist_inc = 0.5;
+            double dist_x = 0;
+            double dist_y = 0;
+            const double max_acceleration = 10;
+            const double max_jerk = 10;
+            for(int i = 0; i < WAYPOINTS_COUNT; i++)
+            {
+                double speed = (double)i/(double)WAYPOINTS_COUNT;
+                dist_x += dist_inc * speed * cos(deg2rad(car_yaw));
+                dist_y += dist_inc * speed * sin(deg2rad(car_yaw));
+                next_x.push_back(car_x+dist_x);
+                next_y.push_back(car_y+dist_y);
+            }
 
           	// TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
-          	msgJson["next_x"] = next_x_vals;
-          	msgJson["next_y"] = next_y_vals;
+          	msgJson["next_x"] = next_x;
+          	msgJson["next_y"] = next_y;
 
           	auto msg = "42[\"control\","+ msgJson.dump()+"]";
 
