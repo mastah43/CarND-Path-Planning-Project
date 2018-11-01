@@ -18,7 +18,11 @@ private:
     std::vector<double> x;
     std::vector<double> y;
 public:
-    Trajectory(const std::vector<double> &x, const std::vector<double> &y);
+
+    // TODO static const double intervalSecs = 0.02;
+
+    Trajectory();
+    virtual ~Trajectory() = default;
 
 public:
     /**
@@ -31,6 +35,12 @@ public:
      */
     const std::vector<double> &getY() const;
 
+    /**
+     * Appends a way point
+     * @param x
+     * @param y
+     */
+    void append(const double &x, const double &y);
 
 };
 

@@ -5,31 +5,18 @@
 #ifndef PATH_PLANNING_EGOVEHICLESTATE_H
 #define PATH_PLANNING_EGOVEHICLESTATE_H
 
+#include "XYCoord.h"
+#include "FrenetCoord.h"
+
 /**
  * The state if the ego vehicle.
  */
 class EgoVehicleState {
 
 private:
-    /**
-     * in meter
-     */
-    double x; // in meter
+    XYCoord xy;
 
-    /**
-     * in meter
-     */
-    double y; // in meter
-
-    /**
-     * frenet distance longitudinal in meter
-     */
-    double s;
-
-    /**
-     * frenet deviation lateral in meter
-     */
-    double d;
+    FrenetCoord frenet;
 
     /**
      * yaw angle in degrees
@@ -42,30 +29,35 @@ private:
     double speed;
 
 public:
+    EgoVehicleState();
+
+    XYCoord &getXy() const;
+
     double getX() const;
 
     double getY() const;
 
-    double getS() const;
+    FrenetCoord &getFrenet() const;
 
-    double getD() const;
-
+    /**
+     *
+     * @return in degrees
+     */
     double getYaw() const;
+
+    /**
+     *
+     * @return in radians
+     */
+    double getYawRad() const;
 
     double getSpeed() const;
 
-    void setX(double x);
-
-    void setY(double y);
-
-    void setS(double s);
-
-    void setD(double d);
+    void setPos(double x, double y, double s, double d);
 
     void setYaw(double yaw);
 
     void setSpeed(double speed);
-
 };
 
 
