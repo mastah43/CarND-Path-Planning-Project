@@ -5,13 +5,13 @@
 #include "EgoVehicleState.h"
 #include "../Trigonometry.h"
 
-EgoVehicleState::EgoVehicleState() : xy(XYCoord(-1, -1), frenet(FrenetCoord(-1, -1))) {}
+EgoVehicleState::EgoVehicleState() : xy(XYCoord(-1, -1)), frenet(FrenetCoord(-1, -1)) {}
 
-XYCoord &EgoVehicleState::getXy() const {
+XYCoord &EgoVehicleState::getXy() {
     return xy;
 }
 
-FrenetCoord &EgoVehicleState::getFrenet() const {
+FrenetCoord &EgoVehicleState::getFrenet() {
     return frenet;
 }
 
@@ -42,11 +42,11 @@ double EgoVehicleState::getYawRad() const {
     return deg2rad(EgoVehicleState::yaw);
 }
 
-const double EgoVehicleState::getX() const {
+double EgoVehicleState::getX() const {
     return EgoVehicleState::xy.x;
 }
 
-const double EgoVehicleState::getY() const {
+double EgoVehicleState::getY() const {
     return EgoVehicleState::xy.y;
 }
 

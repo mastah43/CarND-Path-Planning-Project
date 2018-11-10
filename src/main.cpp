@@ -40,15 +40,21 @@ Map &loadMap() {
     return MapLoader().load("../data/highway_map.csv");
 }
 
-void fillEgoState(EgoVehicleState &state, json &j) {
+EgoVehicleState fillEgoState(json &j) {
+    EgoVehicleState state;
     state.setPos(j["x"], j["y"], j["s"], j["d"]);
     state.setYaw(j["yaw"]);
     state.setSpeed(j["speed"]);
+    return state;
 }
 
-void fillTrajectoryPrevious(TrajectoryFrenetEnd &trajectory, json &j) {
+TrajectoryFrenetEnd fillTrajectoryPrevious(json &j) {
+    FrenetCoord trajectoryEnd(j["end_path_s"], j["end_path_d"]);
+    TrajectoryFrenetEnd trajectory(trajectoryEnd);
+
+    // TODO iterate on x and y path coordindates and append
     trajectory.append(j["previous_path_x"], j["previous_path_y"]);
-    trajectory.setFrenetEnd(j["end_path_s"], j["end_path_d"]);
+    return trajectory;
 }
 
 void sendTrajectory(uWS::WebSocket<uWS::SERVER> &ws, Trajectory &trajectory) {
@@ -70,6 +76,25 @@ bool isEvent(char *data, size_t length) {
 int main() {
     uWS::Hub h;
 
+    // TODO
+    std::string file = "TODO";
+    std::ifstream in_map_(file.c_str(), std::ifstream::in);
+
+    string line;
+    while (getline(in_map_, line)) {
+        istringstream iss(line);
+        double x;
+        double y;
+        float s;
+        float d_x;
+        float d_y;
+        iss >> x;
+        iss >> y;
+        iss >> s;
+        iss >> d_x;
+        iss >> d_y;
+    }
+
     TrajectoryPlanner trajectoryPlanner;
     Map map = loadMap();
 
@@ -77,19 +102,17 @@ int main() {
             [&map, &trajectoryPlanner](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
                 if (isEvent(data, length)) {
                     auto j = getEventJson(data);
-                    if (j.!= NULL) {
-                        string event = j[0].get<string>();
+                    if (j) {
+                        json eventJson = j.get();
+                        string event = eventJson[0].get<string>();
                         if (event == "telemetry") {
-                            json jsonData = j[1];
+                            json jsonData = eventJson[1];
 
-                            TrajectoryFrenetEnd trajectoryPrevious;
-                            // TODO fillTrajectoryPrevious(&trajectoryPrevious, &jsonData);
-
-                            EgoVehicleState egoVehicleState;
-                            // TODO fillEgoState(&egoVehicleState, &jsonData);
+                            TrajectoryFrenetEnd trajectoryPrevious = fillTrajectoryPrevious(jsonData);
+                            EgoVehicleState egoVehicleState = fillEgoState(jsonData);
 
                             // Sensor Fusion Data, a list of all other cars on the same side of the road.
-                            auto sensor_fusion = j[1]["sensor_fusion"];
+                            auto sensor_fusion = eventJson[1]["sensor_fusion"];
                             // TODO convert to object hierarchy
 
                             // TODO record behaviour of other objects as trajectories to build a model that can predict trajectories of other objects

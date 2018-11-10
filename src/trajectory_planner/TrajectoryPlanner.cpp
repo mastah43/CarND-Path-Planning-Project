@@ -10,7 +10,7 @@ static const int MAX_JERK = 10;
 
 static const int MAX_ACCELERATION = 10;
 
-Trajectory &
+const Trajectory
 TrajectoryPlanner::planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious) {
     double distInc = 0.5;
     double distX = 0;
@@ -26,6 +26,5 @@ TrajectoryPlanner::planTrajectory(const EgoVehicleState &egoState, const Traject
         trajectory.append(egoState.getY()+distY, egoState.getY()+distY);
     }
 
-    // TODO convert to const?
-    return &trajectory;
+    return trajectory;
 }

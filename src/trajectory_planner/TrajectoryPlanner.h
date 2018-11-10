@@ -12,7 +12,7 @@
 
 class TrajectoryPlanner {
 public:
-    Trajectory& planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious);
+    const Trajectory planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious);
 };
 
 #endif //PATH_PLANNING_TRAJECTORYPLANNER_H

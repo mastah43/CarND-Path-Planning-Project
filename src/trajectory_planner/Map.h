@@ -9,15 +9,37 @@
 #include "XYCoord.h"
 #include "FrenetCoord.h"
 
+// TODO split into multiple headers?
+
+class MapBuilder;
+
 class MapCoord {
+    friend class MapBuilder;
+private:
+    std::shared_ptr<MapCoord> nextCoord;
+    std::shared_ptr<MapCoord> prevCoord;
+
 public:
     MapCoord(const XYCoord &xy, const FrenetCoord &f);
 
     const XYCoord xy;
     const FrenetCoord f;
-};
 
-class MapBuilder;
+    MapCoord& getNext() const;
+    MapCoord& getPrev() const;
+    double distanceTo(const XYCoord &c) const;
+
+    /**
+     * Determines the heading angle in radians from this map coordinate
+     * to the given coordinate.
+     * @param xy
+     * @return 0 to 2*PI
+     */
+    double headingTo(const XYCoord &xy) const;
+
+    double headingTo(const MapCoord &c) const;
+
+};
 
 class Map {
     friend class MapBuilder;
@@ -27,10 +49,11 @@ private:
 public:
     explicit Map(double maxS);
 
-    const MapCoord getClosestWaypoint(const XYCoord &xy) const;
-    const MapCoord getNextWaypoint(const XYCoord &xy, double theta) const;
-    const FrenetCoord getFrenet(const XYCoord &xy, double theta) const;
-    const XYCoord getXY(const FrenetCoord &f) const;
+    MapCoord& getClosestWaypoint(const XYCoord &xy) const;
+    MapCoord& getPrevWaypointByFrenetS(double s) const;
+    MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
+    const FrenetCoord& getFrenet(const XYCoord &xy, double theta) const;
+    const XYCoord& getXY(const FrenetCoord &f) const;
 
     /**
      * @return The max s value before wrapping around the track back to 0
@@ -41,6 +64,7 @@ public:
 class MapBuilder {
 private:
     Map map;
+    double maxS;
 public:
     explicit MapBuilder(double maxS);
 

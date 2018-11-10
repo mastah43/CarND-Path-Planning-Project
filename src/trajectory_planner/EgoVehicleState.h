@@ -9,7 +9,7 @@
 #include "FrenetCoord.h"
 
 /**
- * The state if the ego vehicle.
+ * The state of the ego vehicle.
  */
 class EgoVehicleState {
 
@@ -31,13 +31,13 @@ private:
 public:
     EgoVehicleState();
 
-    XYCoord &getXy() const;
+    XYCoord &getXy();
+
+    FrenetCoord &getFrenet();
 
     double getX() const;
 
     double getY() const;
-
-    FrenetCoord &getFrenet() const;
 
     /**
      *

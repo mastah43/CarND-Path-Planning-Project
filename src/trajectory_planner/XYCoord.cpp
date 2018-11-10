@@ -8,7 +8,7 @@ XYCoord::XYCoord(double x, double y) : x(x), y(y) {
 
 }
 
-double XYCoord::distanceTo(XYCoord c) {
+double XYCoord::distanceTo(const XYCoord &c) const {
     double dx = c.x - x;
     double dy = c.y - y;
     return sqrt(dx * dx + dy * dy);

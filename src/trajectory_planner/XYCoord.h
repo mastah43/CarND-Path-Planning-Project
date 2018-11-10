@@ -22,7 +22,7 @@ public:
      */
     double y;
 
-    double distanceTo(XYCoord c);
+    double distanceTo(const XYCoord &c) const;
 };
 
 #endif //PATH_PLANNING_XYCOORD_H

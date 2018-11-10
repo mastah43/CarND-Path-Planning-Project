@@ -4,138 +4,84 @@
 
 #include "Map.h"
 
+#include <memory>
+#include "../Trigonometry.h"
 
-MapCoord::MapCoord(const XYCoord &xy, const FrenetCoord &f) : xy(xy), f(f) {
-}
+
 
 
 Map::Map(double maxS) : maxS(maxS) {}
 
+MapCoord& Map::getClosestWaypoint(const XYCoord &xy) const {
 
-const MapCoord Map::getClosestWaypoint(const XYCoord &xy) const {
-    return MapCoord();
-}
+    double closestLen = 100000; // large number
 
-const MapCoord Map::getNextWaypoint(const XYCoord &xy, double theta) const {
-    return MapCoord();
-}
-
-const FrenetCoord Map::getFrenet(const XYCoord &xy, double theta) const {
-    return FrenetCoord();
-}
-
-const XYCoord Map::getXY(const FrenetCoord &f) const {
-    int prev_wp = -1;
-
-    // TODO implement binary search via s of given frenet coord
-    MapCoord mapCoordAhead;
+    std::shared_ptr<MapCoord> closest = nullptr;
     for (MapCoord c : Map::coords) {
-        if (f.s < c.f.s) {
-            mapCoordAhead = c;
+        double dist = c.distanceTo(xy);
+        if (dist < closestLen) {
+            closestLen = dist;
+            closest = std::make_shared<MapCoord>(c);
         }
     }
 
-    while(f.s > maps_s[prev_wp+1] && (prev_wp < (int)(maps_s.size()-1) ))
-    {
-        prev_wp++;
+    if (closest == nullptr) {
+        throw std::out_of_range("map contains no coordinates");
     }
 
-    int wp2 = (prev_wp+1)%maps_x.size();
+    return *closest;
+}
 
-    double heading = atan2((maps_y[wp2]-maps_y[prev_wp]),(maps_x[wp2]-maps_x[prev_wp]));
-    // the x,y,s along the segment
-    double seg_s = (s-maps_s[prev_wp]);
+MapCoord &Map::getNextWaypoint(const XYCoord &xy, double theta) const {
+    MapCoord& closestWaypoint = getClosestWaypoint(xy);
+    double heading = closestWaypoint.headingTo(xy);
+    double angle = angleRadDiff(theta, heading);
+    if (angle > pi() / 4) {
+        return closestWaypoint.getNext();
+    } else {
+        return closestWaypoint;
+    }
+}
 
-    double seg_x = maps_x[prev_wp]+seg_s*cos(heading);
-    double seg_y = maps_y[prev_wp]+seg_s*sin(heading);
+const FrenetCoord &Map::getFrenet(const XYCoord &xy, double theta) const {
+    return coords[0].f; // TODO
+}
 
-    double perp_heading = heading-pi()/2;
+MapCoord& Map::getPrevWaypointByFrenetS(double s) const {
+    // TODO optimize performance by implementing binary search via s of given frenet coord
+    std::shared_ptr<MapCoord> waypointNext = nullptr;
+    for (const MapCoord &c : Map::coords) {
+        if (s < c.f.s) {
+            waypointNext = std::make_shared<MapCoord>(c);
+        }
+    }
 
-    double x = seg_x + d*cos(perp_heading);
-    double y = seg_y + d*sin(perp_heading);
+    if (waypointNext == nullptr) {
+        throw std::out_of_range("no way points in map");
+    }
 
-    return {x,y};
+    return *waypointNext;
+}
 
+// TODO implement tests
+const XYCoord &Map::getXY(const FrenetCoord &f) const {
+    MapCoord waypointPrev = getPrevWaypointByFrenetS(f.s);
+    MapCoord &waypointNext = waypointPrev.getNext();
 
-    return XYCoord();
+    double heading = waypointNext.headingTo(waypointPrev);
+    double segS = f.s - waypointPrev.f.s;
+    double segX = waypointPrev.xy.x + segS * cos(heading);
+    double segY = waypointPrev.xy.y + segS * sin(heading);
+
+    double perpendicularHeading = anglePerpendicular(heading);
+
+    double x = segX + f.d * cos(perpendicularHeading);
+    double y = segY + f.d * sin(perpendicularHeading);
+
+    // TODO fix, create object on heap
+    return XYCoord(x, y);
 }
 
 const double Map::getMaxS() const {
     return maxS;
 }
-
-int ClosestWaypoint(double x, double y, const vector<double> &maps_x, const vector<double> &maps_y)
-{
-
-    double closestLen = 100000; //large number
-    int closestWaypoint = 0;
-
-    for(int i = 0; i < maps_x.size(); i++)
-    {
-        double map_x = maps_x[i];
-        double map_y = maps_y[i];
-        double dist = distance(x,y,map_x,map_y);
-        if(dist < closestLen)
-        {
-            closestLen = dist;
-            closestWaypoint = i;
-        }
-
-    }
-
-    return closestWaypoint;
-
-}
-
-int NextWaypoint(double x, double y, double theta, const vector<double> &maps_x, const vector<double> &maps_y)
-{
-
-    int closestWaypoint = ClosestWaypoint(x,y,maps_x,maps_y);
-
-    double map_x = maps_x[closestWaypoint];
-    double map_y = maps_y[closestWaypoint];
-
-    double heading = atan2((map_y-y),(map_x-x));
-
-    double angle = fabs(theta-heading);
-    angle = min(2*pi() - angle, angle);
-
-    if(angle > pi()/4)
-    {
-        closestWaypoint++;
-        if (closestWaypoint == maps_x.size())
-        {
-            closestWaypoint = 0;
-        }
-    }
-
-    return closestWaypoint;
-}
-
-vector<double> getXY(double s, double d, const vector<double> &maps_s, const vector<double> &maps_x, const vector<double> &maps_y)
-{
-    int prev_wp = -1;
-
-    while(s > maps_s[prev_wp+1] && (prev_wp < (int)(maps_s.size()-1) ))
-    {
-        prev_wp++;
-    }
-
-    int wp2 = (prev_wp+1)%maps_x.size();
-
-    double heading = atan2((maps_y[wp2]-maps_y[prev_wp]),(maps_x[wp2]-maps_x[prev_wp]));
-    // the x,y,s along the segment
-    double seg_s = (s-maps_s[prev_wp]);
-
-    double seg_x = maps_x[prev_wp]+seg_s*cos(heading);
-    double seg_y = maps_y[prev_wp]+seg_s*sin(heading);
-
-    double perp_heading = heading-pi()/2;
-
-    double x = seg_x + d*cos(perp_heading);
-    double y = seg_y + d*sin(perp_heading);
-
-    return {x,y};
-
-}
-
