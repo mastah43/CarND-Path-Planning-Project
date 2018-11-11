@@ -6,6 +6,7 @@
 #define PATH_PLANNING_TRAJECTORY_H
 
 #include <vector>
+#include "XYCoord.h"
 
 /**
  * Describes a trajectory in points to reach after a fixed time interval
@@ -41,6 +42,8 @@ public:
      * @param y
      */
     void append(const double &x, const double &y);
+
+    void append(XYCoord xy);
 
 };
 

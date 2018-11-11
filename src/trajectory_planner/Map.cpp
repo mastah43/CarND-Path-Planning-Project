@@ -78,8 +78,8 @@ const XYCoord &Map::getXY(const FrenetCoord &f) const {
     double x = segX + f.d * cos(perpendicularHeading);
     double y = segY + f.d * sin(perpendicularHeading);
 
-    // TODO fix, create object on heap
-    return XYCoord(x, y);
+    static XYCoord xy(x, y);
+    return xy;
 }
 
 const double Map::getMaxS() const {

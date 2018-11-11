@@ -18,6 +18,8 @@ public:
      * deviation lateral in meter
      */
     double d;
+
+    void incS(double d);
 };
 
 

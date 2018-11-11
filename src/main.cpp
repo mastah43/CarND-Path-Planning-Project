@@ -8,7 +8,7 @@
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
-#include "trajectory_planner/TrajectoryPlanner.h"
+#include "trajectory_planner/TrajectoryPlannerFollowLane.h"
 #include "trajectory_planner/Map.h"
 
 using namespace std;
@@ -76,27 +76,8 @@ bool isEvent(char *data, size_t length) {
 int main() {
     uWS::Hub h;
 
-    // TODO
-    std::string file = "TODO";
-    std::ifstream in_map_(file.c_str(), std::ifstream::in);
-
-    string line;
-    while (getline(in_map_, line)) {
-        istringstream iss(line);
-        double x;
-        double y;
-        float s;
-        float d_x;
-        float d_y;
-        iss >> x;
-        iss >> y;
-        iss >> s;
-        iss >> d_x;
-        iss >> d_y;
-    }
-
-    TrajectoryPlanner trajectoryPlanner;
     Map map = loadMap();
+    TrajectoryPlannerFollowLane trajectoryPlanner(map);
 
     h.onMessage(
             [&map, &trajectoryPlanner](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {

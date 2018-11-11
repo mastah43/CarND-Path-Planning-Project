@@ -19,3 +19,7 @@ void Trajectory::append(const double &x, const double &y) {
     Trajectory::y.push_back(y);
 }
 
+void Trajectory::append(XYCoord xy) {
+    Trajectory::append(xy.x, xy.y);
+}
+

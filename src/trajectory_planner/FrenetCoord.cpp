@@ -8,3 +8,7 @@ FrenetCoord::FrenetCoord(double s, double d) : s(s), d(d) {
 
 }
 
+void FrenetCoord::incS(double d) {
+    FrenetCoord::s += d;
+}
+

@@ -4,27 +4,15 @@
 
 #include "TrajectoryPlanner.h"
 
-#define WAYPOINTS_COUNT 50
+TrajectoryPlanner::TrajectoryPlanner(Map &map) : map(map) {
+}
 
-static const int MAX_JERK = 10;
-
-static const int MAX_ACCELERATION = 10;
+Map TrajectoryPlanner::getMap() {
+    return map;
+}
 
 const Trajectory
 TrajectoryPlanner::planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious) {
-    double distInc = 0.5;
-    double distX = 0;
-    double distY = 0;
-
-    Trajectory trajectory;
-
-    for(int i = 0; i < WAYPOINTS_COUNT; i++) {
-        const double speed = (double)i/(double)WAYPOINTS_COUNT;
-        const double yawRad = egoState.getYawRad();
-        distX += distInc * speed * cos(yawRad);
-        distY += distInc * speed * sin(yawRad);
-        trajectory.append(egoState.getY()+distY, egoState.getY()+distY);
-    }
-
-    return trajectory;
+    return Trajectory();
 }
+

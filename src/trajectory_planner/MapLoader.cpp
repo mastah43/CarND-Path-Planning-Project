@@ -8,8 +8,6 @@
 // needed otherwise problem with istringstream(string) instantiation for iss problems
 #include "../Eigen-3.3/Eigen/Core"
 
-using namespace std;
-
 Map &MapLoader::load(const std::string& file) {
 
     const double maxS = 6945.554;
@@ -17,22 +15,6 @@ Map &MapLoader::load(const std::string& file) {
 
     std::ifstream in_map_(file.c_str(), std::ifstream::in);
 
-    string line;
-    while (getline(in_map_, line)) {
-        istringstream iss(line);
-        double x;
-        double y;
-        float s;
-        float d_x;
-        float d_y;
-        iss >> x;
-        iss >> y;
-        iss >> s;
-        iss >> d_x;
-        iss >> d_y;
-    }
-
-    /*
     std::string line;
     while (getline(in_map_, line)) {
         std::istringstream iss(line);
@@ -58,7 +40,6 @@ Map &MapLoader::load(const std::string& file) {
 
         mapBuilder.addCoord(coord);
     }
-     */
 
     return mapBuilder.build();
 }
