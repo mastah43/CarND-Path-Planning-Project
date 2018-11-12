@@ -16,8 +16,8 @@ class MapBuilder;
 class MapCoord {
     friend class MapBuilder;
 private:
-    std::shared_ptr<MapCoord> nextCoord;
-    std::shared_ptr<MapCoord> prevCoord;
+    MapCoord *nextCoord;
+    MapCoord *prevCoord;
 
 public:
     MapCoord(const XYCoord &xy, const FrenetCoord &f);
@@ -69,7 +69,7 @@ public:
     explicit MapBuilder(double maxS);
 
 public:
-    void addCoord(const MapCoord &coord);
+    void addCoord(MapCoord &coord);
     Map& build();
 };
 

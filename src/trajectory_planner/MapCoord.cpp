@@ -8,8 +8,8 @@
 MapCoord::MapCoord(const XYCoord &xy, const FrenetCoord &f) :
     xy(xy),
     f(f),
-    nextCoord(nullptr),
-    prevCoord(nullptr) {
+    nextCoord(this),
+    prevCoord(this) {
 }
 
 double MapCoord::distanceTo(const XYCoord &c) const {
