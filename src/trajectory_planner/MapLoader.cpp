@@ -8,7 +8,7 @@
 // needed otherwise problem with istringstream(string) instantiation for iss problems
 #include "../Eigen-3.3/Eigen/Core"
 
-Map &MapLoader::load(const std::string& file) {
+Map* MapLoader::load(const std::string& file) {
 
     const double maxS = 6945.554;
     MapBuilder mapBuilder(6945.554);
@@ -16,6 +16,7 @@ Map &MapLoader::load(const std::string& file) {
     std::ifstream in_map_(file.c_str(), std::ifstream::in);
 
     std::string line;
+    int nextCoordId = 1;
     while (getline(in_map_, line)) {
         std::istringstream iss(line);
         double x;
@@ -34,9 +35,9 @@ Map &MapLoader::load(const std::string& file) {
 
         // TODO what is dx and dy? I need only d.
         double d = sqrt(dx*dx + dy*dy);
-        const FrenetCoord frenet(s, dx);
+        const FrenetCoord frenet(s, d);
 
-        MapCoord coord(xy, frenet);
+        MapCoord coord(nextCoordId++, xy, frenet);
 
         mapBuilder.addCoord(coord);
     }

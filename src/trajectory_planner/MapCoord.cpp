@@ -5,7 +5,8 @@
 #include "Map.h"
 #include "../Trigonometry.h"
 
-MapCoord::MapCoord(const XYCoord &xy, const FrenetCoord &f) :
+MapCoord::MapCoord(int id, const XYCoord &xy, const FrenetCoord &f) :
+    id(id),
     xy(xy),
     f(f),
     nextCoord(this),
@@ -31,5 +32,6 @@ double MapCoord::headingTo(const XYCoord &xy) const {
 double MapCoord::headingTo(const MapCoord &c) const {
     return MapCoord::headingTo(c.xy);
 }
+
 
 

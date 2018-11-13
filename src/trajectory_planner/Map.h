@@ -16,11 +16,12 @@ class MapBuilder;
 class MapCoord {
     friend class MapBuilder;
 private:
+    int id;
     MapCoord *nextCoord;
     MapCoord *prevCoord;
 
 public:
-    MapCoord(const XYCoord &xy, const FrenetCoord &f);
+    MapCoord(int id, const XYCoord &xy, const FrenetCoord &f);
 
     const XYCoord xy;
     const FrenetCoord f;
@@ -63,19 +64,19 @@ public:
 
 class MapBuilder {
 private:
-    Map map;
+    Map* map;
     double maxS;
 public:
     explicit MapBuilder(double maxS);
 
 public:
-    void addCoord(MapCoord &coord);
-    Map& build();
+    void addCoord(MapCoord &coordAdd);
+    Map* build();
 };
 
 class MapLoader {
 public:
-    Map& load(const std::string &file);
+    Map* load(const std::string &file);
 };
 
 #endif //PATH_PLANNING_MAP_H

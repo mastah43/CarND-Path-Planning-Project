@@ -36,7 +36,7 @@ std::shared_ptr<json> getEventJson(string s) {
     }
 }
 
-Map &loadMap() {
+Map* loadMap() {
     return MapLoader().load("../data/highway_map.csv");
 }
 
@@ -76,7 +76,7 @@ bool isEvent(char *data, size_t length) {
 int main() {
     uWS::Hub h;
 
-    Map map = loadMap();
+    Map map = *loadMap();
     TrajectoryPlannerFollowLane trajectoryPlanner(map);
 
     h.onMessage(
