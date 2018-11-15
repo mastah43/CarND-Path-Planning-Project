@@ -10,6 +10,7 @@
 #include "json.hpp"
 #include "trajectory_planner/TrajectoryPlannerFollowLane.h"
 #include "trajectory_planner/Map.h"
+#include "trajectory_planner/SensorFusionResult.h"
 
 using namespace std;
 
@@ -22,17 +23,17 @@ using json = nlohmann::json;
  * @param s
  * @return
  */
-std::shared_ptr<json> getEventJson(string s) {
+std::string getEventJsonString(string s) {
     auto found_null = s.find("null");
     auto b1 = s.find_first_of('[');
     auto b2 = s.find_first_of('}');
     if (found_null != string::npos) {
-        return nullptr;
+        return "";
     } else if (b1 != string::npos && b2 != string::npos) {
-        json::parse(s.substr(b1, b2 - b1 + 2));
-        return shared_ptr<json>();
+        std::string jsonString = s.substr(b1, b2 - b1 + 2);
+        return jsonString;
     } else {
-        return nullptr;
+        return "";
     }
 }
 
@@ -51,10 +52,28 @@ EgoVehicleState fillEgoState(json &j) {
 TrajectoryFrenetEnd fillTrajectoryPrevious(json &j) {
     FrenetCoord trajectoryEnd(j["end_path_s"], j["end_path_d"]);
     TrajectoryFrenetEnd trajectory(trajectoryEnd);
-
-    // TODO iterate on x and y path coordindates and append
-    trajectory.append(j["previous_path_x"], j["previous_path_y"]);
+    json jPathX = j["previous_path_x"];
+    json jPathY = j["previous_path_y"];
+    for (int i=0; i<jPathX.size(); i++) {
+        trajectory.append(jPathX[i], jPathY[i]);
+    }
     return trajectory;
+}
+
+SensorFusionResult fillSensorFusion(json &j) {
+    SensorFusionResult fusion;
+    for (auto jVehicle : j) {
+        int id = jVehicle[0];
+        double x = jVehicle[1];
+        double y = jVehicle[2];
+        double vx = jVehicle[3];
+        double vy = jVehicle[4];
+        double s = jVehicle[5];
+        double d = jVehicle[6];
+        VehicleState vehicle(id, XYCoord(x,y), FrenetCoord(s,d), XYVelocity(vx, vy));
+        fusion.addVehicle(vehicle);
+    }
+    return fusion;
 }
 
 void sendTrajectory(uWS::WebSocket<uWS::SERVER> &ws, Trajectory &trajectory) {
@@ -79,13 +98,23 @@ int main() {
     Map map = *loadMap();
     TrajectoryPlannerFollowLane trajectoryPlanner(map);
 
+    {
+        std::string jsonString = "[\"telemetry\",{\"x\":909.48,\"y\":1128.67,\"yaw\":0,\"speed\":0,\"s\":124.8336,\"d\":6.164833,\"previous_path_x\":[],\"previous_path_y\":[],\"end_path_s\":0,\"end_path_d\":0,\"sensor_fusion\":[[0,775.99,1421.6,0,0,6721.839,-277.6729],[1,775.8,1425.2,0,0,6719.219,-280.1494],[2,775.8,1429,0,0,6716.599,-282.9019],[3,775.8,1432.9,0,0,6713.911,-285.7268],[4,775.8,1436.3,0,0,6711.566,-288.1896],[5,775.8,1441.7,0,0,6661.772,-291.7797],[6,762.1,1421.6,0,0,6711.778,-268.0964],[7,762.1,1425.2,0,0,6709.296,-270.7039],[8,762.1,1429,0,0,6663.543,-273.1828],[9,762.1,1432.9,0,0,6660.444,-275.5511],[10,762.1,1436.3,0,0,6657.743,-277.6157],[11,762.1,1441.7,0,0,6653.453,-280.8947]]}]";
+        auto j = json::parse(jsonString);
+        std::string event = j[0].get<string>();
+        std::cout << "event:" << event << std::endl;
+    }
+
+
     h.onMessage(
             [&map, &trajectoryPlanner](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
                 if (isEvent(data, length)) {
-                    auto j = getEventJson(data);
-                    if (j) {
-                        json eventJson = j.get();
-                        string event = eventJson[0].get<string>();
+
+                    std::string jsonString = getEventJsonString(data);
+                    if (!jsonString.empty()) {
+                        json eventJson = json::parse(jsonString);
+                        json eventHeaderJson = eventJson[0];
+                        string event = eventHeaderJson.get<string>();
                         if (event == "telemetry") {
                             json jsonData = eventJson[1];
 
@@ -93,18 +122,18 @@ int main() {
                             EgoVehicleState egoVehicleState = fillEgoState(jsonData);
 
                             // Sensor Fusion Data, a list of all other cars on the same side of the road.
-                            auto sensor_fusion = eventJson[1]["sensor_fusion"];
-                            // TODO convert to object hierarchy
+                            SensorFusionResult sensorFusion = fillSensorFusion(jsonData["sensor_fusion"]);
 
                             // TODO record behaviour of other objects as trajectories to build a model that can predict trajectories of other objects
 
-                            // TODO the trajectory planner should be aware already of the previous trajectory so remove the argument
-                            const Trajectory trajectory = trajectoryPlanner.planTrajectory(egoVehicleState,
-                                                                                           trajectoryPrevious);
+                            Trajectory trajectory = trajectoryPlanner.planTrajectory(egoVehicleState,
+                                                                                   sensorFusion,
+                                                                                   trajectoryPrevious);
 
-                            //this_thread::sleep_for(chrono::milliseconds(1000));
+                            // TODO why wait for one second?
+                            this_thread::sleep_for(chrono::milliseconds(1000));
 
-                            // TODO sendTrajectory(&ws, &trajectory);
+                            sendTrajectory(ws, trajectory);
                         }
                     } else {
                         // Manual driving

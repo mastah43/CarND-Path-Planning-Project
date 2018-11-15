@@ -9,7 +9,10 @@
 
 class TrajectoryPlannerStraight : TrajectoryPlanner {
 public:
-    const Trajectory planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious);
+
+    const Trajectory planTrajectory(const EgoVehicleState &egoState,
+                                    const SensorFusionResult &sensorFusion,
+                                    const TrajectoryFrenetEnd &trajectorPrevious) override;
 };
 
 

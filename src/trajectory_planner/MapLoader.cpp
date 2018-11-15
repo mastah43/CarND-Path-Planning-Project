@@ -33,11 +33,9 @@ Map* MapLoader::load(const std::string& file) {
         iss >> dx;
         iss >> dy;
 
-        // TODO what is dx and dy? I need only d.
-        double d = sqrt(dx*dx + dy*dy);
-        const FrenetCoord frenet(s, d);
+        const FrenetCoord frenet(s, 0);
 
-        MapCoord coord(nextCoordId++, xy, frenet);
+        MapCoord coord(nextCoordId++, xy, frenet, dx, dy);
 
         mapBuilder.addCoord(coord);
     }

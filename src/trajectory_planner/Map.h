@@ -21,10 +21,12 @@ private:
     MapCoord *prevCoord;
 
 public:
-    MapCoord(int id, const XYCoord &xy, const FrenetCoord &f);
+    MapCoord(int id, const XYCoord &xy, const FrenetCoord &f, double dx, double dy);
 
     const XYCoord xy;
     const FrenetCoord f;
+    const double dx;
+    const double dy;
 
     MapCoord& getNext() const;
     MapCoord& getPrev() const;

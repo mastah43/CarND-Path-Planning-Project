@@ -11,7 +11,8 @@ static const int MAX_JERK = 10;
 static const int MAX_ACCELERATION = 10;
 
 const Trajectory
-TrajectoryPlannerStraight::planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious) {
+TrajectoryPlannerStraight::planTrajectory(const EgoVehicleState &egoState, const SensorFusionResult &sensorFusion,
+                                            const TrajectoryFrenetEnd &trajectorPrevious) {
     double distInc = 0.5;
     double distX = 0;
     double distY = 0;

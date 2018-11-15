@@ -5,10 +5,12 @@
 #include "Map.h"
 #include "../Trigonometry.h"
 
-MapCoord::MapCoord(int id, const XYCoord &xy, const FrenetCoord &f) :
+MapCoord::MapCoord(int id, const XYCoord &xy, const FrenetCoord &f, double dx, double dy) :
     id(id),
     xy(xy),
     f(f),
+    dx(dx),
+    dy(dy),
     nextCoord(this),
     prevCoord(this) {
 }

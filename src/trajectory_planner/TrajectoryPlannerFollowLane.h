@@ -11,8 +11,10 @@ class TrajectoryPlannerFollowLane : TrajectoryPlanner {
 
 public:
     explicit TrajectoryPlannerFollowLane(Map &map);
-    const Trajectory planTrajectory(const EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectorPrevious);
 
+    const Trajectory planTrajectory(const EgoVehicleState &egoState,
+                                    const SensorFusionResult &sensorFusion,
+                                    const TrajectoryFrenetEnd &trajectorPrevious) override;
 };
 
 
