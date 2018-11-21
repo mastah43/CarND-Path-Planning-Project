@@ -29,14 +29,14 @@ TrajectoryPlannerFollowLane::planTrajectory(const EgoVehicleState &egoState, con
     double speedMax = 100/3.6;
     Trajectory trajectory;
     Map map = TrajectoryPlanner::getMap();
-    FrenetCoord waypoint(0, 0);
+    FrenetCoord waypoint(egoState.getFrenet());
+
     for (int i = 0; i < WAYPOINTS_COUNT; i++) {
         double timeStep = WAYPOINT_STEP_TIME_MS;
         acceleration = fmin(accelerationMax, acceleration + (accelerationMax*timeStep/accelerationMaxTime));
         speed = fmin(speedMax, timeStep*acceleration);
         waypoint.incS(timeStep/1000. * speed);
         const XYCoord xy = map.getXY(waypoint);
-        // TODO xy calculation wrong
         trajectory.append(xy);
 
         time += timeStep;

@@ -7,11 +7,11 @@
 
 EgoVehicleState::EgoVehicleState() : xy(XYCoord(-1, -1)), frenet(FrenetCoord(-1, -1)) {}
 
-XYCoord &EgoVehicleState::getXy() {
+XYCoord EgoVehicleState::getXY() const {
     return xy;
 }
 
-FrenetCoord &EgoVehicleState::getFrenet() {
+FrenetCoord EgoVehicleState::getFrenet() const {
     return frenet;
 }
 

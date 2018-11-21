@@ -31,9 +31,9 @@ private:
 public:
     EgoVehicleState();
 
-    XYCoord &getXy();
+    XYCoord getXY() const;
 
-    FrenetCoord &getFrenet();
+    FrenetCoord getFrenet() const;
 
     double getX() const;
 
