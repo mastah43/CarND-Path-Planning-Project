@@ -12,7 +12,7 @@
 
 Map::Map(double maxS) : maxS(maxS) {}
 
-MapCoord& Map::getClosestWaypoint(const XYCoord &xy) const {
+const MapCoord& Map::getClosestWaypoint(const XYCoord &xy) const {
 
     double closestLen = 100000; // large number
 
@@ -32,12 +32,12 @@ MapCoord& Map::getClosestWaypoint(const XYCoord &xy) const {
     return *closest;
 }
 
-MapCoord &Map::getNextWaypoint(const XYCoord &xy, double theta) const {
-    MapCoord& closestWaypoint = getClosestWaypoint(xy);
+const MapCoord &Map::getNextWaypoint(const XYCoord &xy, double theta) const {
+    const MapCoord& closestWaypoint = getClosestWaypoint(xy);
     double heading = closestWaypoint.headingTo(xy);
     double angle = angleRadDiff(theta, heading);
     if (angle > pi() / 4) {
-        return closestWaypoint.getNext();
+        return getNext(closestWaypoint);
     } else {
         return closestWaypoint;
     }
@@ -47,26 +47,22 @@ const FrenetCoord &Map::getFrenet(const XYCoord &xy, double theta) const {
     return coords[0].f; // TODO
 }
 
-MapCoord& Map::getPrevWaypointByFrenetS(double s) const {
+const MapCoord& Map::getPrevWaypointByFrenetS(double s) const {
     // TODO optimize performance by implementing binary search via s of given frenet coord
-    std::shared_ptr<MapCoord> waypointNext = nullptr;
+    const MapCoord* waypointNext = &Map::coords[0];
     for (const MapCoord &c : Map::coords) {
-        if (s < c.f.s) {
-            waypointNext = std::make_shared<MapCoord>(c);
+        if (s > c.f.s) {
+            waypointNext = &c;
         }
-    }
-
-    if (waypointNext == nullptr) {
-        throw std::out_of_range("no way points in map");
     }
 
     return *waypointNext;
 }
 
 // TODO implement tests
-const XYCoord &Map::getXY(const FrenetCoord &f) const {
-    MapCoord waypointPrev = getPrevWaypointByFrenetS(f.s);
-    MapCoord &waypointNext = waypointPrev.getNext();
+const XYCoord Map::getXY(const FrenetCoord &f) const {
+    const MapCoord &waypointPrev = getPrevWaypointByFrenetS(f.s);
+    const MapCoord &waypointNext = getNext(waypointPrev);
 
     double heading = waypointNext.headingTo(waypointPrev);
     double segS = f.s - waypointPrev.f.s;
@@ -78,10 +74,17 @@ const XYCoord &Map::getXY(const FrenetCoord &f) const {
     double x = segX + f.d * cos(perpendicularHeading);
     double y = segY + f.d * sin(perpendicularHeading);
 
-    static XYCoord xy(x, y);
-    return xy;
+    return XYCoord(x, y);
 }
 
 const double Map::getMaxS() const {
     return maxS;
+}
+
+const MapCoord &Map::getNext(const MapCoord &c) const {
+    return coords[(c.index + 1) % coords.size()];
+}
+
+const MapCoord &Map::getPrev(const MapCoord &c) const {
+    return coords[(c.index -1) % coords.size()];
 }

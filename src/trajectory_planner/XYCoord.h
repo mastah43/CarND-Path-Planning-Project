@@ -11,6 +11,7 @@ class XYCoord {
 public:
 
     XYCoord(double x, double y);
+    XYCoord(const XYCoord &xy);
 
     /**
      * in meter

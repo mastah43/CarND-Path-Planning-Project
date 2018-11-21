@@ -14,22 +14,16 @@
 class MapBuilder;
 
 class MapCoord {
-    friend class MapBuilder;
-private:
-    int id;
-    MapCoord *nextCoord;
-    MapCoord *prevCoord;
-
 public:
-    MapCoord(int id, const XYCoord &xy, const FrenetCoord &f, double dx, double dy);
 
+    MapCoord(int index, XYCoord xy, FrenetCoord f, double dx, double dy);
     const XYCoord xy;
+
     const FrenetCoord f;
     const double dx;
     const double dy;
+    const int index;
 
-    MapCoord& getNext() const;
-    MapCoord& getPrev() const;
     double distanceTo(const XYCoord &c) const;
 
     /**
@@ -52,11 +46,13 @@ private:
 public:
     explicit Map(double maxS);
 
-    MapCoord& getClosestWaypoint(const XYCoord &xy) const;
-    MapCoord& getPrevWaypointByFrenetS(double s) const;
-    MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
+    const MapCoord& getNext(const MapCoord& c) const;
+    const MapCoord& getPrev(const MapCoord& c) const;
+    const MapCoord& getClosestWaypoint(const XYCoord &xy) const;
+    const MapCoord& getPrevWaypointByFrenetS(double s) const;
+    const MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
     const FrenetCoord& getFrenet(const XYCoord &xy, double theta) const;
-    const XYCoord& getXY(const FrenetCoord &f) const;
+    const XYCoord getXY(const FrenetCoord &f) const;
 
     /**
      * @return The max s value before wrapping around the track back to 0

@@ -5,26 +5,16 @@
 #include "Map.h"
 #include "../Trigonometry.h"
 
-MapCoord::MapCoord(int id, const XYCoord &xy, const FrenetCoord &f, double dx, double dy) :
-    id(id),
+MapCoord::MapCoord(int index, const XYCoord xy, const FrenetCoord f, double dx, double dy) :
+    index(index),
     xy(xy),
     f(f),
     dx(dx),
-    dy(dy),
-    nextCoord(this),
-    prevCoord(this) {
+    dy(dy) {
 }
 
 double MapCoord::distanceTo(const XYCoord &c) const {
     return MapCoord::xy.distanceTo(c);
-}
-
-MapCoord& MapCoord::getNext() const {
-    return *MapCoord::nextCoord;
-}
-
-MapCoord& MapCoord::getPrev() const {
-    return *MapCoord::prevCoord;
 }
 
 double MapCoord::headingTo(const XYCoord &xy) const {
