@@ -16,7 +16,6 @@ Map* MapLoader::load(const std::string& file) {
     std::ifstream in_map_(file.c_str(), std::ifstream::in);
 
     std::string line;
-    int nextCoordIndex = 0;
     while (getline(in_map_, line)) {
         std::istringstream iss(line);
         double x;
@@ -35,9 +34,7 @@ Map* MapLoader::load(const std::string& file) {
 
         const FrenetCoord frenet(s, 0);
 
-        MapCoord coord(nextCoordIndex++, xy, frenet, dx, dy);
-
-        mapBuilder.addCoord(coord);
+        mapBuilder.addCoord(xy, frenet, dx, dy);
     }
 
     return mapBuilder.build();

@@ -5,6 +5,8 @@
 #ifndef PATH_PLANNING_FRENETCOORD_H
 #define PATH_PLANNING_FRENETCOORD_H
 
+#include <string>
+
 class FrenetCoord {
 public:
     FrenetCoord(double s, double d);
@@ -20,6 +22,8 @@ public:
     double d;
 
     void incS(double d);
+
+    friend std::ostream & operator<<(std::ostream & Str, FrenetCoord const & c);
 };
 
 

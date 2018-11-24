@@ -51,7 +51,7 @@ public:
     const MapCoord& getClosestWaypoint(const XYCoord &xy) const;
     const MapCoord& getPrevWaypointByFrenetS(double s) const;
     const MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
-    const FrenetCoord& getFrenet(const XYCoord &xy, double theta) const;
+    const FrenetCoord getFrenet(const XYCoord &xy, double theta) const;
     const XYCoord getXY(const FrenetCoord &f) const;
 
     /**
@@ -64,11 +64,12 @@ class MapBuilder {
 private:
     Map* map;
     double maxS;
+    int indexNext;
 public:
     explicit MapBuilder(double maxS);
 
 public:
-    void addCoord(MapCoord &coordAdd);
+    void addCoord(XYCoord xy, FrenetCoord f, double dx, double dy);
     Map* build();
 };
 

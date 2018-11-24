@@ -18,7 +18,7 @@ double MapCoord::distanceTo(const XYCoord &c) const {
 }
 
 double MapCoord::headingTo(const XYCoord &xy) const {
-    return atan2((MapCoord::xy.y - xy.y), (MapCoord::xy.x - xy.x));
+    return MapCoord::xy.headingTo(xy);
 }
 
 double MapCoord::headingTo(const MapCoord &c) const {

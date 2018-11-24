@@ -16,8 +16,7 @@
  */
 class Trajectory {
 private:
-    std::vector<double> x;
-    std::vector<double> y;
+    std::vector<XYCoord> xy;
 public:
 
     // TODO static const double intervalSecs = 0.02;
@@ -29,22 +28,40 @@ public:
     /**
      * @return the trajectory of x positions
      */
-    const std::vector<double> &getX() const;
+    const std::vector<double> getX() const;
 
     /**
      * @return the trajectory of y positions
      */
-    const std::vector<double> &getY() const;
+    const std::vector<double> getY() const;
+
+    /**
+     * @return the trajectory xy positions
+     */
+    const std::vector<XYCoord> &getXY() const;
 
     /**
      * Appends a way point
      * @param x
      * @param y
      */
-    void append(const double &x, const double &y);
+    void append(double x, double y);
 
     void append(XYCoord xy);
 
+    unsigned int size() const;
+
+    XYCoord getAt(int index) const;
+
+    /**
+    * Transform to local coordinate system by using given new origin and orientation.
+    * @param origin absolute position of local coordinate system in global coordinate system
+    * @param yaw orientation of local coordinate system in absolute coordinate syste in radians
+    * @return reference to self
+    */
+    void transformToLocal(XYCoord origin, double yaw);
+
+    void cout(std::string msg) const;
 };
 
 

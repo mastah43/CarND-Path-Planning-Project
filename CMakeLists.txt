@@ -23,7 +23,7 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 add_executable(path_planning ${sources})
 target_link_libraries(path_planning z ssl uv uWS)
 
-file(GLOB test_sources "tests/*.cpp")
+file(GLOB test_sources "tests/*.h" "tests/*.cpp")
 add_subdirectory(gtests)
 find_package(Threads REQUIRED)
 enable_testing()
