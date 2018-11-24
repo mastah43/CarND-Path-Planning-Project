@@ -8,6 +8,7 @@
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
+#include "Trigonometry.h"
 #include "trajectory_planner/TrajectoryPlannerFollowLane.h"
 #include "trajectory_planner/Map.h"
 #include "trajectory_planner/SensorFusionResult.h"
@@ -44,7 +45,7 @@ Map* loadMap() {
 EgoVehicleState fillEgoState(json &j) {
     EgoVehicleState state;
     state.setPos(j["x"], j["y"], j["s"], j["d"]);
-    state.setYaw(j["yaw"]);
+    state.setYaw(deg2rad(j["yaw"]));
     state.setSpeed(j["speed"]);
     return state;
 }
@@ -131,7 +132,7 @@ int main() {
                                                                                    trajectoryPrevious);
 
                             // TODO why wait for one second?
-                            this_thread::sleep_for(chrono::milliseconds(1000));
+                            //this_thread::sleep_for(chrono::milliseconds(1000));
 
                             sendTrajectory(ws, trajectory);
                         }

@@ -16,8 +16,7 @@
  */
 class Trajectory {
 private:
-    std::vector<double> x;
-    std::vector<double> y;
+    std::vector<XYCoord> xy;
 public:
 
     // TODO static const double intervalSecs = 0.02;
@@ -29,22 +28,34 @@ public:
     /**
      * @return the trajectory of x positions
      */
-    const std::vector<double> &getX() const;
+    const std::vector<double> getX() const;
 
     /**
      * @return the trajectory of y positions
      */
-    const std::vector<double> &getY() const;
+    const std::vector<double> getY() const;
+
+    /**
+     * @return the trajectory xy positions
+     */
+    const std::vector<XYCoord> &getXY() const;
 
     /**
      * Appends a way point
      * @param x
      * @param y
      */
-    void append(const double &x, const double &y);
+    void append(double x, double y);
 
     void append(XYCoord xy);
 
+    unsigned int size() const;
+
+    XYCoord getAt(int index) const;
+
+    void transform(double tx, double ty, double tyaw);
+
+    void cout(std::string msg) const;
 };
 
 

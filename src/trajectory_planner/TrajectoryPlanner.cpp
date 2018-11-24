@@ -7,12 +7,12 @@
 TrajectoryPlanner::TrajectoryPlanner(Map &map) : map(map) {
 }
 
-Map TrajectoryPlanner::getMap() {
+Map TrajectoryPlanner::getMap() const {
     return map;
 }
 
 const Trajectory
-TrajectoryPlanner::planTrajectory(const EgoVehicleState &egoState, const SensorFusionResult &sensorFusion,
+TrajectoryPlanner::planTrajectory(EgoVehicleState &egoState, const SensorFusionResult &sensorFusion,
                                   const TrajectoryFrenetEnd &trajectorPrevious) {
     return Trajectory();
 }

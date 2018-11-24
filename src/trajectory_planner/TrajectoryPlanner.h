@@ -15,12 +15,12 @@ class TrajectoryPlanner {
 private:
     Map map;
 protected:
-    Map getMap();
+    Map getMap() const;
 
 public:
     explicit TrajectoryPlanner(Map &map);
 
-    virtual const Trajectory planTrajectory(const EgoVehicleState &egoState,
+    virtual const Trajectory planTrajectory(EgoVehicleState &egoState,
                                             const SensorFusionResult &sensorFusion,
                                             const TrajectoryFrenetEnd &trajectorPrevious);
 };

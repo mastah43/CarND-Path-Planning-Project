@@ -30,6 +30,7 @@ private:
 
 public:
     EgoVehicleState();
+    EgoVehicleState(EgoVehicleState const &toCopy);
 
     XYCoord getXY() const;
 
@@ -41,19 +42,14 @@ public:
 
     /**
      *
-     * @return in degrees
-     */
-    double getYaw() const;
-
-    /**
-     *
      * @return in radians
      */
-    double getYawRad() const;
+    double getYaw() const;
 
     double getSpeed() const;
 
     void setPos(double x, double y, double s, double d);
+    void setPos(XYCoord xy, FrenetCoord f);
 
     void setYaw(double yaw);
 

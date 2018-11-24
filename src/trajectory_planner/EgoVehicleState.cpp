@@ -7,6 +7,8 @@
 
 EgoVehicleState::EgoVehicleState() : xy(XYCoord(-1, -1)), frenet(FrenetCoord(-1, -1)) {}
 
+EgoVehicleState::EgoVehicleState(EgoVehicleState const &toCopy) = default;
+
 XYCoord EgoVehicleState::getXY() const {
     return xy;
 }
@@ -38,16 +40,17 @@ void EgoVehicleState::setSpeed(double speed) {
     EgoVehicleState::speed = speed;
 }
 
-double EgoVehicleState::getYawRad() const {
-    return deg2rad(EgoVehicleState::yaw);
-}
-
 double EgoVehicleState::getX() const {
     return EgoVehicleState::xy.x;
 }
 
 double EgoVehicleState::getY() const {
     return EgoVehicleState::xy.y;
+}
+
+void EgoVehicleState::setPos(XYCoord xy, FrenetCoord f) {
+    EgoVehicleState::xy = xy;
+    EgoVehicleState::frenet = f;
 }
 
 

@@ -8,7 +8,9 @@
 #include "../Trigonometry.h"
 
 
-
+double distance(double x1, double y1, double x2, double y2) {
+    return sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+}
 
 Map::Map(double maxS) : maxS(maxS) {}
 
@@ -43,8 +45,45 @@ const MapCoord &Map::getNextWaypoint(const XYCoord &xy, double theta) const {
     }
 }
 
-const FrenetCoord &Map::getFrenet(const XYCoord &xy, double theta) const {
-    return coords[0].f; // TODO
+const FrenetCoord Map::getFrenet(const XYCoord &xy, double theta) const {
+    const MapCoord &nextWP = Map::getNextWaypoint(xy, theta);
+    const MapCoord &prevWP = Map::getPrev(nextWP);
+
+    double n_x = nextWP.xy.x - prevWP.xy.x;
+    double n_y = nextWP.xy.y - prevWP.xy.y;
+    double x_x = xy.x - prevWP.xy.x;
+    double x_y = xy.y - prevWP.xy.y;
+
+    // find the projection of x onto n
+    double proj_norm = (x_x*n_x+x_y*n_y)/(n_x*n_x+n_y*n_y);
+    double proj_x = proj_norm*n_x;
+    double proj_y = proj_norm*n_y;
+
+    double frenet_d = distance(x_x,x_y,proj_x,proj_y);
+
+    //see if d value is positive or negative by comparing it to a center point
+
+    double center_x = 1000-prevWP.xy.x;
+    double center_y = 2000-prevWP.xy.y;
+    double centerToPos = distance(center_x,center_y,x_x,x_y);
+    double centerToRef = distance(center_x,center_y,proj_x,proj_y);
+
+    if(centerToPos <= centerToRef)
+    {
+        frenet_d *= -1;
+    }
+
+    // calculate s value
+    double frenet_s = 0;
+    for(int i = 0; i < prevWP.index; i++)
+    {
+        frenet_s += coords[i].distanceTo(coords[i+1].xy);
+    }
+
+    frenet_s += distance(0,0,proj_x,proj_y);
+
+    return FrenetCoord(frenet_s,frenet_d);
+
 }
 
 const MapCoord& Map::getPrevWaypointByFrenetS(double s) const {

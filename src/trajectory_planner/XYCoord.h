@@ -24,6 +24,22 @@ public:
     double y;
 
     double distanceTo(const XYCoord &c) const;
+
+    double distanceToOrigin() const;
+
+    double headingTo(const XYCoord &c) const;
+
+    /**
+     * Transform by a translation and then a rotation.
+     * @param tx translation x
+     * @param ty translation y
+     * @param tyaw radians angle for rotation
+     */
+    void transform(double tx, double ty, double tyaw);
+
+    XYCoord movedYawXY(double yaw, double distance);
+
+    void cout() const;
 };
 
 #endif //PATH_PLANNING_XYCOORD_H

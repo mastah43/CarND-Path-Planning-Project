@@ -51,7 +51,7 @@ public:
     const MapCoord& getClosestWaypoint(const XYCoord &xy) const;
     const MapCoord& getPrevWaypointByFrenetS(double s) const;
     const MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
-    const FrenetCoord& getFrenet(const XYCoord &xy, double theta) const;
+    const FrenetCoord getFrenet(const XYCoord &xy, double theta) const;
     const XYCoord getXY(const FrenetCoord &f) const;
 
     /**
