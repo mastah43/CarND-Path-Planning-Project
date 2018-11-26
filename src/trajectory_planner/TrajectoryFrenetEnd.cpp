@@ -13,6 +13,6 @@ void TrajectoryFrenetEnd::setFrenetEnd(double s, double d) {
     end.s = s;
 }
 
-TrajectoryFrenetEnd::TrajectoryFrenetEnd(FrenetCoord &end) : end(end) {
+TrajectoryFrenetEnd::TrajectoryFrenetEnd(FrenetCoord end) : end(end) {
 
 }

@@ -36,9 +36,9 @@ const MapCoord& Map::getClosestWaypoint(const XYCoord &xy) const {
 
 const MapCoord &Map::getNextWaypoint(const XYCoord &xy, double theta) const {
     const MapCoord& closestWaypoint = getClosestWaypoint(xy);
-    double heading = closestWaypoint.headingTo(xy);
+    double heading = xy.headingTo(closestWaypoint.xy);
     double angle = angleRadDiff(theta, heading);
-    if (angle > pi() / 4) {
+    if (angle > M_PI / 4) {
         return getNext(closestWaypoint);
     } else {
         return closestWaypoint;

@@ -8,13 +8,13 @@ TEST(XYTest, FirstTest) {
     EXPECT_DOUBLE_EQ(0., XYCoord(0,0).x);
 }
 
-TEST(XYTest, DistanceTo) {
+TEST(XY, DistanceTo) {
     const XYCoord &a = XYCoord(0, 0);
     const XYCoord &b = XYCoord(1, 1);
     EXPECT_DOUBLE_EQ(sqrt(2), a.distanceTo(b));
 }
 
-TEST(XYTest, HeadingTo) {
+TEST(XY, HeadingTo) {
     const XYCoord &origin = XYCoord(0, 0);
     EXPECT_DOUBLE_EQ(0, origin.headingTo(XYCoord(1, 0)));
     EXPECT_DOUBLE_EQ(M_PI/4, origin.headingTo(XYCoord(1, 1)));
@@ -24,7 +24,7 @@ TEST(XYTest, HeadingTo) {
     EXPECT_DOUBLE_EQ(-M_PI/4, origin.headingTo(XYCoord(1, -1)));
 }
 
-TEST(XYTest, MoveYaw) {
+TEST(XY, MoveYaw) {
     const XYCoord &origin = XYCoord(0, 0);
     const XYCoord &target = XYCoord(1, 2);
     XYCoord moved = XYCoord(origin);
@@ -32,22 +32,22 @@ TEST(XYTest, MoveYaw) {
     EXPECT_XY_EQ(target.x, target.y, moved);
 }
 
-TEST(XYTest, TransformLocalMove) {
+TEST(XY, TransformLocalMove) {
     EXPECT_XY_EQ(-1,0, XYCoord(0, 0).transformToLocal(XYCoord(1, 0), 0));
     EXPECT_XY_EQ(-1,-1, XYCoord(0, 0).transformToLocal(XYCoord(1, 1), 0));
 }
 
-TEST(XYTest, TransformLocalMoveAndRotate) {
+TEST(XY, TransformLocalMoveAndRotate) {
     EXPECT_XY_EQ(-1,0, XYCoord(1, 0).transformToLocal(XYCoord(0, 0), M_PI));
 }
 
-TEST(XYTest, TransformToLocalAndBackToGlobal) {
+TEST(XY, TransformToLocalAndBackToGlobal) {
     XYCoord origin(1, 2);
     double yaw = M_PI/2;
     EXPECT_XY_EQ(2, 3, XYCoord(2, 3).transformToLocal(origin, yaw).transformToGlobal(origin, yaw));
 }
 
-TEST(XYTest, TransformRealistic) {
+TEST(XY, TransformRealistic) {
     XYCoord c(0.27430445606884768, 0.00031840767033004943);
     c.transformToGlobal(XYCoord(923.22619999999995, 1128.7660000000001), 0.01454971894163009);
     EXPECT_XY_EQ(923.50047078965451, 1128.7703087960767, c);

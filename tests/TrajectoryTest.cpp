@@ -5,7 +5,7 @@
 #include <math.h>
 
 
-TEST(TrajectoryTest, Size) {
+TEST(Trajectory, Size) {
     Trajectory t;
     t.append(0, 0);
     t.append(1, 2);
@@ -13,7 +13,7 @@ TEST(TrajectoryTest, Size) {
     EXPECT_EQ(3, t.size());
 }
 
-TEST(TrajectoryTest, TransformToLocal) {
+TEST(Trajectory, TransformToLocal) {
     Trajectory t;
     t.append(2, 2);
     t.append(3, 2);

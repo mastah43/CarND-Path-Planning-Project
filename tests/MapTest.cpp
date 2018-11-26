@@ -2,7 +2,7 @@
 #include "../src/trajectory_planner/Map.h"
 #include "Verifiers.h"
 
-TEST(MapTest, GetFrenetAndGetXY) {
+TEST(Map, GetFrenetAndGetXY) {
     Map map = *MapLoader().load("../data/highway_map.csv");
 
     XYCoord c(909.48,1128.67);

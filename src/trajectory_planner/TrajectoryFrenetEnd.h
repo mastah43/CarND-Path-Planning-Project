@@ -13,7 +13,7 @@ private:
     FrenetCoord end;
 
 public:
-    explicit TrajectoryFrenetEnd(FrenetCoord &end);
+    explicit TrajectoryFrenetEnd(FrenetCoord end);
 
     const FrenetCoord &getEnd() const;
 
