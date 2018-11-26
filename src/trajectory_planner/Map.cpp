@@ -126,3 +126,7 @@ const MapCoord &Map::getNext(const MapCoord &c) const {
 const MapCoord &Map::getPrev(const MapCoord &c) const {
     return coords[(c.index -1) % coords.size()];
 }
+
+const MapCoord &Map::getWaypointAt(int index) const {
+    return coords[index];
+}

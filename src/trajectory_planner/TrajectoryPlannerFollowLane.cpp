@@ -17,14 +17,12 @@
 #define VELOCITY_DESIRED_KMH 49.5
 
 
-TrajectoryPlannerFollowLane::TrajectoryPlannerFollowLane(Map &map) : TrajectoryPlanner(map) {
+TrajectoryPlannerFollowLane::TrajectoryPlannerFollowLane(const Map &map) : TrajectoryPlanner(map) {
 }
 
 const Trajectory
 TrajectoryPlannerFollowLane::planTrajectory(EgoVehicleState &egoState, const SensorFusionResult &sensorFusion,
                                   const TrajectoryFrenetEnd &trajectoryPrevious) {
-
-    // TODO use previous trajectory
 
     double speed = egoState.getSpeed();
     Map map = TrajectoryPlanner::getMap();

@@ -53,6 +53,8 @@ public:
     const MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
     const FrenetCoord getFrenet(const XYCoord &xy, double theta) const;
     const XYCoord getXY(const FrenetCoord &f) const;
+    const MapCoord& getWaypointAt(int index) const;
+
 
     /**
      * @return The max s value before wrapping around the track back to 0

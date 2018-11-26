@@ -4,10 +4,10 @@
 
 #include "TrajectoryPlanner.h"
 
-TrajectoryPlanner::TrajectoryPlanner(Map &map) : map(map) {
+TrajectoryPlanner::TrajectoryPlanner(const Map &map) : map(map) {
 }
 
-Map TrajectoryPlanner::getMap() const {
+const Map TrajectoryPlanner::getMap() const {
     return map;
 }
 

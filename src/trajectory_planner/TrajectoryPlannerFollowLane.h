@@ -13,7 +13,7 @@ class TrajectoryPlannerFollowLane : TrajectoryPlanner {
                                 Trajectory &trajectory) const;
 public:
 
-    explicit TrajectoryPlannerFollowLane(Map &map);
+    explicit TrajectoryPlannerFollowLane(const Map &map);
 
     const Trajectory planTrajectory(EgoVehicleState &egoState,
                                     const SensorFusionResult &sensorFusion,
