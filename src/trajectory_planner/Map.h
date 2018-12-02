@@ -50,16 +50,19 @@ public:
     const MapCoord& getPrev(const MapCoord& c) const;
     const MapCoord& getClosestWaypoint(const XYCoord &xy) const;
     const MapCoord& getPrevWaypointByFrenetS(double s) const;
-    const MapCoord& getNextWaypoint(const XYCoord &xy, double theta) const;
+    const MapCoord& getNextWaypoint(const XYCoord &xy, double yaw) const;
     const FrenetCoord getFrenet(const XYCoord &xy, double theta) const;
     const XYCoord getXY(const FrenetCoord &f) const;
     const MapCoord& getWaypointAt(int index) const;
-
+    const double normalizeFrenetS(double frenetS) const;
+    unsigned int getWaypointCount() const;
 
     /**
      * @return The max s value before wrapping around the track back to 0
      */
     const double getMaxS() const;
+
+    double getFrenetDeviationForLane(int lane);
 };
 
 class MapBuilder {
@@ -72,6 +75,7 @@ public:
 
 public:
     void addCoord(XYCoord xy, FrenetCoord f, double dx, double dy);
+    void addCoord(XYCoord xy, double dx, double dy);
     Map* build();
 };
 

@@ -4,40 +4,41 @@
 
 #include "Map.h"
 
+#include <cmath>
 #include <memory>
 #include "../Trigonometry.h"
-
+#include "WorldConstants.h"
 
 double distance(double x1, double y1, double x2, double y2) {
-    return sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
 Map::Map(double maxS) : maxS(maxS) {}
 
-const MapCoord& Map::getClosestWaypoint(const XYCoord &xy) const {
+const MapCoord &Map::getClosestWaypoint(const XYCoord &xy) const {
 
     double closestLen = 100000; // large number
 
-    std::shared_ptr<MapCoord> closest = nullptr;
+    int closestIndex = -1;
     for (MapCoord c : Map::coords) {
         double dist = c.distanceTo(xy);
         if (dist < closestLen) {
             closestLen = dist;
-            closest = std::make_shared<MapCoord>(c);
+            closestIndex = c.index;
         }
     }
 
-    if (closest == nullptr) {
+    if (closestIndex < 0) {
         throw std::out_of_range("map contains no coordinates");
     }
 
-    return *closest;
+    return coords[closestIndex];
 }
 
-const MapCoord &Map::getNextWaypoint(const XYCoord &xy, double theta) const {
-    const MapCoord& closestWaypoint = getClosestWaypoint(xy);
+const MapCoord &Map::getNextWaypoint(const XYCoord &xy, double yaw) const {
+    const MapCoord &closestWaypoint = getClosestWaypoint(xy);
     double heading = xy.headingTo(closestWaypoint.xy);
-    double angle = angleRadDiff(theta, heading);
+    double angle = angleRadDiff(yaw, heading);
     if (angle > M_PI / 4) {
         return getNext(closestWaypoint);
     } else {
@@ -55,40 +56,31 @@ const FrenetCoord Map::getFrenet(const XYCoord &xy, double theta) const {
     double x_y = xy.y - prevWP.xy.y;
 
     // find the projection of x onto n
-    double proj_norm = (x_x*n_x+x_y*n_y)/(n_x*n_x+n_y*n_y);
-    double proj_x = proj_norm*n_x;
-    double proj_y = proj_norm*n_y;
+    double proj_norm = (x_x * n_x + x_y * n_y) / (n_x * n_x + n_y * n_y);
+    double proj_x = proj_norm * n_x;
+    double proj_y = proj_norm * n_y;
 
-    double frenet_d = distance(x_x,x_y,proj_x,proj_y);
-
-    //see if d value is positive or negative by comparing it to a center point
-
-    double center_x = 1000-prevWP.xy.x;
-    double center_y = 2000-prevWP.xy.y;
-    double centerToPos = distance(center_x,center_y,x_x,x_y);
-    double centerToRef = distance(center_x,center_y,proj_x,proj_y);
-
-    if(centerToPos <= centerToRef)
-    {
+    double frenet_d = distance(x_x, x_y, proj_x, proj_y);
+    if (prevWP.headingTo(xy) >= prevWP.headingTo(nextWP)) {
         frenet_d *= -1;
     }
 
     // calculate s value
     double frenet_s = 0;
-    for(int i = 0; i < prevWP.index; i++)
-    {
-        frenet_s += coords[i].distanceTo(coords[i+1].xy);
+    for (int i = 0; i < prevWP.index; i++) {
+        frenet_s += coords[i].distanceTo(coords[i + 1].xy);
     }
 
-    frenet_s += distance(0,0,proj_x,proj_y);
+    frenet_s += distance(0, 0, proj_x, proj_y);
 
-    return FrenetCoord(frenet_s,frenet_d);
+    return FrenetCoord(frenet_s, frenet_d);
 
 }
 
-const MapCoord& Map::getPrevWaypointByFrenetS(double s) const {
+const MapCoord &Map::getPrevWaypointByFrenetS(double s) const {
     // TODO optimize performance by implementing binary search via s of given frenet coord
-    const MapCoord* waypointNext = &Map::coords[0];
+    s = normalizeFrenetS(s);
+    const MapCoord *waypointNext = &Map::coords[0];
     for (const MapCoord &c : Map::coords) {
         if (s > c.f.s) {
             waypointNext = &c;
@@ -101,9 +93,10 @@ const MapCoord& Map::getPrevWaypointByFrenetS(double s) const {
 const XYCoord Map::getXY(const FrenetCoord &f) const {
     const MapCoord &waypointPrev = getPrevWaypointByFrenetS(f.s);
     const MapCoord &waypointNext = getNext(waypointPrev);
-
+// TODO use a spline between map positions
     double heading = waypointPrev.headingTo(waypointNext);
-    double segS = f.s - waypointPrev.f.s;
+
+    double segS = normalizeFrenetS(f.s - waypointPrev.f.s);
     double segX = waypointPrev.xy.x + segS * cos(heading);
     double segY = waypointPrev.xy.y + segS * sin(heading);
 
@@ -124,9 +117,21 @@ const MapCoord &Map::getNext(const MapCoord &c) const {
 }
 
 const MapCoord &Map::getPrev(const MapCoord &c) const {
-    return coords[(c.index -1) % coords.size()];
+    return coords[(c.index - 1) % coords.size()];
 }
 
 const MapCoord &Map::getWaypointAt(int index) const {
     return coords[index];
+}
+
+const double Map::normalizeFrenetS(double frenetS) const {
+    return std::fmod(frenetS, maxS);
+}
+
+unsigned int Map::getWaypointCount() const {
+    return (unsigned int)coords.size();
+}
+
+double Map::getFrenetDeviationForLane(int lane) {
+    return LANE_WIDTH/2 + (LANE_WIDTH * lane);
 }

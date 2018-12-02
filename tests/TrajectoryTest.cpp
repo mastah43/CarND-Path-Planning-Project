@@ -2,6 +2,7 @@
 #include "../src/trajectory_planner/Trajectory.h"
 #include "../src/Trigonometry.h"
 #include "Verifiers.h"
+#include "MapTestData.h"
 #include <math.h>
 
 

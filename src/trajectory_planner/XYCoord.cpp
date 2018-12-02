@@ -38,30 +38,30 @@ std::ostream & operator<<(std::ostream & str, XYCoord const & c) {
 }
 
 XYCoord &XYCoord::transformToLocal(XYCoord origin, double yaw) {
-    double x = XYCoord::x;
-    double y = XYCoord::y;
+    double xLocal = XYCoord::x;
+    double yLocal = XYCoord::y;
     // translate
-    x += -origin.x;
-    y += -origin.y;
+    xLocal -= origin.x;
+    yLocal -= origin.y;
     // rotate
     double sinYaw = sin(-yaw);
     double cosYaw = cos(-yaw);
-    XYCoord::x = x*cosYaw - y*sinYaw;
-    XYCoord::y = x*sinYaw + y*cosYaw;
+    XYCoord::x = xLocal*cosYaw - yLocal*sinYaw;
+    XYCoord::y = xLocal*sinYaw + yLocal*cosYaw;
     return *this;
 }
 
 XYCoord &XYCoord::transformToGlobal(XYCoord origin, double yaw) {
-    double sinYaw = sin(yaw);
-    double cosYaw = cos(yaw);
     double x = XYCoord::x;
     double y = XYCoord::y;
     // rotate
-    x = x*cosYaw - y*sinYaw;
-    y = x*sinYaw + y*cosYaw;
+    double cosYaw = cos(yaw);
+    double sinYaw = sin(yaw);
+    double xGlobal = x*cosYaw - y*sinYaw;
+    double yGlobal = x*sinYaw + y*cosYaw;
     // translate
-    XYCoord::x = x + origin.x;
-    XYCoord::y = y + origin.y;
+    XYCoord::x = xGlobal + origin.x;
+    XYCoord::y = yGlobal + origin.y;
     return *this;
 }
 

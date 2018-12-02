@@ -53,6 +53,10 @@ public:
 
     XYCoord getAt(int index) const;
 
+    XYCoord getLast() const;
+
+    double getDurationSecs() const;
+
     /**
     * Transform to local coordinate system by using given new origin and orientation.
     * @param origin absolute position of local coordinate system in global coordinate system
@@ -61,7 +65,7 @@ public:
     */
     void transformToLocal(XYCoord origin, double yaw);
 
-    void cout(std::string msg) const;
+    friend std::ostream & operator<<(std::ostream & Str, Trajectory const & t);
 };
 
 

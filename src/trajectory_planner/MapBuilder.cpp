@@ -18,4 +18,15 @@ Map* MapBuilder::build() {
     return built;
 }
 
+void MapBuilder::addCoord(XYCoord xy, double dx, double dy) {
+    // The given highway map seems to have been built using frenet s coordinates
+    // which does not take into account the curved road distance but only strait connections
+    // between waypoints. So we do the same here.
+    double s = 0;
+    for (int i=1; i<map->coords.size(); i++) {
+        s += map->coords[i-1].distanceTo(map->coords[i].xy);
+    }
+    addCoord(xy, FrenetCoord(s, 0), dx, dy);
+}
+
 

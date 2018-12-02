@@ -14,7 +14,7 @@ inline double rad2deg(double x) { return x * 180 / pi(); }
 
 inline double angleRadDiff(double angle1, double angle2) {
     double angle = fabs(angle1 - angle2);
-    return fmin(2 * pi() - angle, angle);
+    return fmod(angle, 2*M_PI);
 }
 
 inline double anglePerpendicular(double a) {

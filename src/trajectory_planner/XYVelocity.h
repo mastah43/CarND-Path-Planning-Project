@@ -12,6 +12,8 @@ public:
     double y;
 
     XYVelocity(double x, double y);
+
+    double getSpeed();
 };
 
 

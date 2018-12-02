@@ -10,9 +10,8 @@
 #include "VehicleState.h"
 
 class SensorFusionResult {
-private:
-    std::vector<VehicleState> vehicles;
 public:
+    std::vector<VehicleState> vehicles;
     SensorFusionResult();
     void addVehicle(VehicleState &vehicle);
 };

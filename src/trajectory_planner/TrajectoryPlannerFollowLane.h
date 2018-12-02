@@ -9,13 +9,15 @@
 
 class TrajectoryPlannerFollowLane : TrajectoryPlanner {
 
+private:
+    int lane;
     EgoVehicleState applyPreviousTrajectory(EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectoryPrevious,
                                 Trajectory &trajectory) const;
 public:
 
     explicit TrajectoryPlannerFollowLane(const Map &map);
 
-    const Trajectory planTrajectory(EgoVehicleState &egoState,
+    const Trajectory planTrajectory(EgoVehicleState &ego,
                                     const SensorFusionResult &sensorFusion,
                                     const TrajectoryFrenetEnd &trajectorPrevious) override;
 

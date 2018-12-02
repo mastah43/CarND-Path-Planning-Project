@@ -47,6 +47,10 @@ TEST(XY, TransformToLocalAndBackToGlobal) {
     EXPECT_XY_EQ(2, 3, XYCoord(2, 3).transformToLocal(origin, yaw).transformToGlobal(origin, yaw));
 }
 
+TEST(XY, TransformToGlobal) {
+    EXPECT_XY_EQ(1, 2, XYCoord(1, 0).transformToGlobal(XYCoord(1, 1), M_PI/2));
+}
+
 TEST(XY, TransformRealistic) {
     XYCoord c(0.27430445606884768, 0.00031840767033004943);
     c.transformToGlobal(XYCoord(923.22619999999995, 1128.7660000000001), 0.01454971894163009);

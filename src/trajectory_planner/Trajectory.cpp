@@ -4,6 +4,8 @@
 
 #include "Trajectory.h"
 #include <iostream>
+#include <stdexcept>
+#include "WorldConstants.h"
 
 Trajectory::Trajectory() : xy(std::vector<XYCoord>()) {}
 
@@ -49,13 +51,24 @@ const std::vector<XYCoord> &Trajectory::getXY() const {
     return xy;
 }
 
-void Trajectory::cout(std::string msg) const {
-    std::cout << msg << ": ";
-    for (int i=0; i<Trajectory::size(); i++) {
-        std::cout << Trajectory::getAt(i);
+std::ostream & operator<<(std::ostream & str, Trajectory const & t) {
+    for (int i=0; i<t.size(); i++) {
+        std::cout << t.getAt(i);
         std::cout << ",";
     }
-    std::cout << std::endl;
+    return str;
+}
+
+XYCoord Trajectory::getLast() const {
+    if (xy.size() == 0) {
+        throw std::bad_function_call( );
+    }
+
+    return getAt((unsigned int)(xy.size() - 1));
+}
+
+double Trajectory::getDurationSecs() const {
+    return size()*WAYPOINT_STEP_TIME_SECS;
 }
 
 

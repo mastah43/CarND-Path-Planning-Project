@@ -10,13 +10,14 @@
 #include "FrenetCoord.h"
 
 class VehicleState {
-private:
+public:
     int id;
     XYCoord xy;
     XYVelocity velocity;
     FrenetCoord frenet;
-public:
     VehicleState(int id, XYCoord xy, FrenetCoord frenet, XYVelocity velocity);
+
+    int getLane();
 };
 
 

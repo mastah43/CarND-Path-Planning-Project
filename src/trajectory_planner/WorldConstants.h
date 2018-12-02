@@ -1,0 +1,23 @@
+//
+// Created by Marc Neumann on 30.11.18.
+//
+
+#ifndef PATH_PLANNING_WORLDCONSTANTS_H
+#define PATH_PLANNING_WORLDCONSTANTS_H
+
+#define WAYPOINTS_COUNT 50
+
+#define WAYPOINT_STEP_TIME_MS 20
+#define WAYPOINT_HORICON_DISTANCE 30
+#define WAYPOINT_STEP_TIME_SECS 0.02
+#define LANE_COUNT 6
+#define LANE_DIRECTION_COUNT 3
+#define LANE_WIDTH_METERS 4
+#define SPEED_MAX_MPH 49.5
+#define SPEED_MS_TO_MPH 2.23694
+#define KEEP_DISTANCE_METERS 30
+// TODO use values from udacity project description
+#define MAX_ACC .224
+#define LANE_WIDTH 4
+
+#endif //PATH_PLANNING_WORLDCONSTANTS_H

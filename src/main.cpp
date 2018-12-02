@@ -12,6 +12,7 @@
 #include "trajectory_planner/TrajectoryPlannerFollowLane.h"
 #include "trajectory_planner/Map.h"
 #include "trajectory_planner/SensorFusionResult.h"
+#include "trajectory_planner/WorldConstants.h"
 
 using namespace std;
 
@@ -79,6 +80,7 @@ SensorFusionResult fillSensorFusion(json &j) {
 
 void sendTrajectory(uWS::WebSocket<uWS::SERVER> &ws, Trajectory &trajectory) {
     json msgJson;
+    std::cout << " next x vals length: " << trajectory.getX().size() << std::endl; // TODO remove
     msgJson["next_x"] = trajectory.getX();
     msgJson["next_y"] = trajectory.getY();
 
@@ -131,10 +133,10 @@ int main() {
                                                                                    sensorFusion,
                                                                                    trajectoryPrevious);
 
-                            // TODO why wait for one second?
-                            //this_thread::sleep_for(chrono::milliseconds(1000));
-
                             sendTrajectory(ws, trajectory);
+
+                            // wait so half the trajectory is driven before the next trajectory is computed
+                            //this_thread::sleep_for(chrono::milliseconds(WAYPOINTS_COUNT*WAYPOINT_STEP_TIME_MS/2));
                         }
                     } else {
                         // Manual driving
