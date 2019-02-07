@@ -61,6 +61,7 @@ const FrenetCoord Map::getFrenet(const XYCoord &xy, double theta) const {
     double proj_y = proj_norm * n_y;
 
     double frenet_d = distance(x_x, x_y, proj_x, proj_y);
+    // TODO need to use abs(headingTo) here?
     if (prevWP.headingTo(xy) >= prevWP.headingTo(nextWP)) {
         frenet_d *= -1;
     }
@@ -132,6 +133,6 @@ unsigned int Map::getWaypointCount() const {
     return (unsigned int)coords.size();
 }
 
-double Map::getFrenetDeviationForLane(int lane) {
-    return LANE_WIDTH/2 + (LANE_WIDTH * lane);
+double Map::getFrenetDeviationForLane(int lane) const {
+    return LANE_WIDTH/2. + (LANE_WIDTH * lane);
 }

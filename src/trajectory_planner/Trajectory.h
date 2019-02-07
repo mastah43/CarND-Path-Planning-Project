@@ -48,7 +48,7 @@ public:
     void append(double x, double y);
 
     void append(XYCoord xy);
-
+    
     unsigned int size() const;
 
     XYCoord getAt(int index) const;

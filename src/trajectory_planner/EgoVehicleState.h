@@ -54,6 +54,7 @@ public:
     void setYaw(double yaw);
 
     void setSpeed(double speed);
+
 };
 
 

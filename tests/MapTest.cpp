@@ -16,7 +16,7 @@ TEST(Map, GetFrenetAndGetXY) {
     EXPECT_XY_EQ(c.x, c.y, c2);
 }
 
-void testGetFrenetPerWaypoint(Map &map) {
+void testGetFrenetForAllWaypoints(Map &map) {
     for (int i=0; i<map.getWaypointCount(); i++) {
         MapCoord c = map.getWaypointAt(i);
         FrenetCoord f = map.getFrenet(c.xy, map.getPrev(c).headingTo(c));
@@ -27,12 +27,13 @@ void testGetFrenetPerWaypoint(Map &map) {
 
 TEST(Map, GetFrenetHighwayMap) {
     Map map = *MapLoader().load("../data/highway_map.csv");
-    testGetFrenetPerWaypoint(map);
+    testGetFrenetForAllWaypoints(map);
 }
 
 TEST(Map, GetFrenetCircularMap) {
+    // TODO frenet s of build map coordinates is unexpectedly 0, seen for coord[1]
     Map map = buildMapCircle(1000, 100);
-    testGetFrenetPerWaypoint(map);
+    testGetFrenetForAllWaypoints(map);
 }
 
 TEST(Map, NormalizeFrenetS) {

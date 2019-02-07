@@ -11,11 +11,22 @@
 #include "SensorFusionResult.h"
 #include "TrajectoryFrenetEnd.h"
 
+struct CarPrediction {
+    bool carAhead;
+    bool carLeft;
+    bool carRight;
+};
+
 class TrajectoryPlanner {
 private:
     const Map map;
-protected:
-    const Map getMap() const;
+    int lane;
+    EgoVehicleState applyPreviousTrajectory(EgoVehicleState &egoState, const TrajectoryFrenetEnd &trajectoryPrevious,
+                                            Trajectory &trajectory) const;
+
+    void addAnchorPointsForTrajectory(const EgoVehicleState &egoRef, Trajectory &trajectoryAnchor) const;
+
+    CarPrediction predictCars(const SensorFusionResult &sensorFusion, const EgoVehicleState &egoRef, double secondsFuture) const;
 
 public:
     explicit TrajectoryPlanner(const Map &map);
@@ -23,6 +34,9 @@ public:
     virtual const Trajectory planTrajectory(EgoVehicleState &egoState,
                                             const SensorFusionResult &sensorFusion,
                                             const TrajectoryFrenetEnd &trajectorPrevious);
+
+
+
 };
 
 #endif //PATH_PLANNING_TRAJECTORYPLANNER_H

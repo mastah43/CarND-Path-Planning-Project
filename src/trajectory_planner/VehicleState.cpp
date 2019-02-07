@@ -17,7 +17,7 @@ int VehicleState::getLane() {
     // TODO use constants
     //for (int i=0; i<LANE_COUNT; i++) {
     //}
-    if ( d > 0 && d < 4 ) {
+    if ( d > 0 && d < LANE_WIDTH ) {
         car_lane = 0;
     } else if ( d > 4 && d < 8 ) {
         car_lane = 1;

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../src/trajectory_planner/TrajectoryPlannerFollowLane.h"
+#include "../src/trajectory_planner/TrajectoryPlanner.h"
 #include "../src/Trigonometry.h"
 #include "Verifiers.h"
 #include "MapTestData.h"
@@ -18,7 +18,6 @@ TrajectoryFrenetEnd moveOnTrajectory(EgoVehicleState &ego, Trajectory &trajector
 
         FrenetCoord egoF = ego.getFrenet();
         //EXPECT_NEAR(0, egoF.d, 0.001);
-        std::cout << "=> trajectory step " << i << " - ego s: " << egoF.s << std::endl;
         EXPECT_LT(lastS, egoF.s);
         lastS = egoF.s;
     }
@@ -32,9 +31,9 @@ TrajectoryFrenetEnd moveOnTrajectory(EgoVehicleState &ego, Trajectory &trajector
     return trajectoryPrev;
 }
 
-TEST(TrajectoryPlannerFollowLane, PlanStraight) {
+TEST(TrajectoryPlanner, PlanStraight) {
     Map map = buildMapStraight(1000, 10);
-    TrajectoryPlannerFollowLane planner(map);
+    TrajectoryPlanner planner(map);
     EgoVehicleState ego;
     FrenetCoord egoPosF(0,0);
     ego.setPos(map.getXY(egoPosF), egoPosF);
@@ -52,10 +51,10 @@ TEST(TrajectoryPlannerFollowLane, PlanStraight) {
 }
 
 
-TEST(TrajectoryPlannerFollowLane, MoveOnCircle) {
+TEST(TrajectoryPlanner, MoveOnCircle) {
     double roadRadius = 500;
     const Map map = buildMapCircle(roadRadius, 1000);
-    TrajectoryPlannerFollowLane planner(map);
+    TrajectoryPlanner planner(map);
 
     EgoVehicleState ego;
     FrenetCoord egoPosF(map.getWaypointAt(0).f);

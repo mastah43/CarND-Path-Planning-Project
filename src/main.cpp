@@ -9,7 +9,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
 #include "Trigonometry.h"
-#include "trajectory_planner/TrajectoryPlannerFollowLane.h"
+#include "trajectory_planner/TrajectoryPlanner.h"
 #include "trajectory_planner/Map.h"
 #include "trajectory_planner/SensorFusionResult.h"
 #include "trajectory_planner/WorldConstants.h"
@@ -99,7 +99,7 @@ int main() {
     uWS::Hub h;
 
     Map map = *loadMap();
-    TrajectoryPlannerFollowLane trajectoryPlanner(map);
+    TrajectoryPlanner trajectoryPlanner(map);
 
     {
         std::string jsonString = "[\"telemetry\",{\"x\":909.48,\"y\":1128.67,\"yaw\":0,\"speed\":0,\"s\":124.8336,\"d\":6.164833,\"previous_path_x\":[],\"previous_path_y\":[],\"end_path_s\":0,\"end_path_d\":0,\"sensor_fusion\":[[0,775.99,1421.6,0,0,6721.839,-277.6729],[1,775.8,1425.2,0,0,6719.219,-280.1494],[2,775.8,1429,0,0,6716.599,-282.9019],[3,775.8,1432.9,0,0,6713.911,-285.7268],[4,775.8,1436.3,0,0,6711.566,-288.1896],[5,775.8,1441.7,0,0,6661.772,-291.7797],[6,762.1,1421.6,0,0,6711.778,-268.0964],[7,762.1,1425.2,0,0,6709.296,-270.7039],[8,762.1,1429,0,0,6663.543,-273.1828],[9,762.1,1432.9,0,0,6660.444,-275.5511],[10,762.1,1436.3,0,0,6657.743,-277.6157],[11,762.1,1441.7,0,0,6653.453,-280.8947]]}]";

@@ -62,7 +62,7 @@ public:
      */
     const double getMaxS() const;
 
-    double getFrenetDeviationForLane(int lane);
+    double getFrenetDeviationForLane(int lane) const;
 };
 
 class MapBuilder {
