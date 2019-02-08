@@ -52,6 +52,7 @@ public:
     const MapCoord& getPrevWaypointByFrenetS(double s) const;
     const MapCoord& getNextWaypoint(const XYCoord &xy, double yaw) const;
     const FrenetCoord getFrenet(const XYCoord &xy, double theta) const;
+    const FrenetCoord getEgoStartPosFrenet() const;
     const XYCoord getXY(const FrenetCoord &f) const;
     const MapCoord& getWaypointAt(int index) const;
     const double normalizeFrenetS(double frenetS) const;

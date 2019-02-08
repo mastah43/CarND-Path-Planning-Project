@@ -35,7 +35,7 @@ TEST(TrajectoryPlanner, PlanStraight) {
     Map map = buildMapStraight(1000, 10);
     TrajectoryPlanner planner(map);
     EgoVehicleState ego;
-    FrenetCoord egoPosF(0,0);
+    FrenetCoord egoPosF = map.getEgoStartPosFrenet();
     ego.setPos(map.getXY(egoPosF), egoPosF);
     TrajectoryFrenetEnd trajectoryPrevious(ego.getFrenet());
     Trajectory trajectory = planner.planTrajectory(ego, SensorFusionResult(), trajectoryPrevious);
@@ -43,7 +43,7 @@ TEST(TrajectoryPlanner, PlanStraight) {
     for (int i=0; i<trajectory.size(); i++) {
         const XYCoord &c = trajectory.getAt(i);
         const FrenetCoord &f = map.getFrenet(c, ego.getYaw());
-        EXPECT_NEAR(0, f.d, 0.001);
+        EXPECT_NEAR(map.getFrenetDeviationForLane(1), f.d, 0.001);
         EXPECT_LT(lastS, f.s);
         lastS = f.s;
     }
@@ -57,11 +57,13 @@ TEST(TrajectoryPlanner, MoveOnCircle) {
     TrajectoryPlanner planner(map);
 
     EgoVehicleState ego;
-    FrenetCoord egoPosF(map.getWaypointAt(0).f);
+    FrenetCoord egoPosF = map.getEgoStartPosFrenet();
     ego.setPos(map.getXY(egoPosF), egoPosF);
 
     const XYCoord mapCircleCenter(0,0);
     TrajectoryFrenetEnd trajectoryPrev(ego.getFrenet());
+    // TODO change test if needed so that circular road is moved on twice
+    //  to test issues regarding moving from end of track to start of track
     for (int i=0; i<1000; i++) {
         std::cout << "====> plan step: " << i << std::endl;
         Trajectory trajectory = planner.planTrajectory(ego, SensorFusionResult(), trajectoryPrev);

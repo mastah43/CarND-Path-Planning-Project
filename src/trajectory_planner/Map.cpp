@@ -136,3 +136,7 @@ unsigned int Map::getWaypointCount() const {
 double Map::getFrenetDeviationForLane(int lane) const {
     return LANE_WIDTH/2. + (LANE_WIDTH * lane);
 }
+
+const FrenetCoord Map::getEgoStartPosFrenet() const {
+    return FrenetCoord(Map::getWaypointAt(0).f.s, Map::getFrenetDeviationForLane(LANE_CENTER_INDEX));
+}
